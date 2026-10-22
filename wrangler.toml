@@ -2,8 +2,7 @@ name = "asko-savdo"
 compatibility_date = "2024-10-22"
 pages_build_output_dir = "./dist"
 
-# D1 ulanishi: Cloudflare kabinetida D1 yaratilgach yoki D1 ruxsati berilgach, UUID shu yerga qo'yiladi:
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "asko-db"
-# database_id = "haqiqiy-d1-uuid-bu-yerga"
+[[d1_databases]]
+binding = "DB"
+database_name = "asko-db"
+database_id = "b17529c4-05b1-4ab3-810c-658575687b2c"
