@@ -49,6 +49,15 @@ export function App() {
 
   // Products (Ombor qoldiqlari)
   const [products, setProducts] = useState(() => {
+    // Migration: force clear legacy demo localStorage keys
+    if (localStorage.getItem('asko_clean_v4') !== 'yes') {
+      localStorage.removeItem('asko_products');
+      localStorage.removeItem('asko_sales');
+      localStorage.removeItem('asko_transfers');
+      localStorage.removeItem('asko_orders');
+      localStorage.setItem('asko_clean_v4', 'yes');
+      return [];
+    }
     const saved = localStorage.getItem('asko_products');
     return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
   });
@@ -84,7 +93,7 @@ export function App() {
     fetch('/api/products')
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setProducts(data);
         }
       })

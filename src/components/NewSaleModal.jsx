@@ -25,17 +25,7 @@ export function NewSaleModal({
   const [carNumber, setCarNumber] = useState('');
   const [carModel, setCarModel] = useState('');
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: products[0]?.id || 'p1',
-      code: products[0]?.code || 'SHN0613',
-      name: products[0]?.name || 'Yallama 195/60/15',
-      price: products[0]?.price || 510000,
-      quantity: 4,
-      isService: false,
-      maxStock: products[0]?.quantity || 44
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]);
 
   const [selectedPayment, setSelectedPayment] = useState('naqd');
   const [paidAmount, setPaidAmount] = useState(0);
@@ -431,51 +421,59 @@ export function NewSaleModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {cartItems.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>
-                        <div style={{ fontWeight: '600' }}>{item.name}</div>
-                        <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
-                          Kod: {item.code} {item.isService ? '(Xizmat)' : `(Omborda: ${item.maxStock} dona)`}
-                        </div>
-                      </td>
-                      <td>{item.price.toLocaleString()} UZS</td>
-                      <td>
-                        <div className="cart-qty-control" style={{ justifyContent: 'center' }}>
+                  {cartItems.length > 0 ? (
+                    cartItems.map((item, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <div style={{ fontWeight: '600' }}>{item.name}</div>
+                          <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+                            Kod: {item.code} {item.isService ? '(Xizmat)' : `(Omborda: ${item.maxStock} dona)`}
+                          </div>
+                        </td>
+                        <td>{item.price.toLocaleString()} UZS</td>
+                        <td>
+                          <div className="cart-qty-control" style={{ justifyContent: 'center' }}>
+                            <button 
+                              type="button" 
+                              className="cart-qty-btn"
+                              onClick={() => handleUpdateQty(idx, -1)}
+                            >
+                              -
+                            </button>
+                            <span style={{ fontWeight: '600', minWidth: '20px', textAlign: 'center' }}>
+                              {item.quantity}
+                            </span>
+                            <button 
+                              type="button" 
+                              className="cart-qty-btn"
+                              onClick={() => handleUpdateQty(idx, 1)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </td>
+                        <td style={{ textAlign: 'right', fontWeight: '700' }}>
+                          {(item.price * item.quantity).toLocaleString()} UZS
+                        </td>
+                        <td style={{ textAlign: 'center' }}>
                           <button 
                             type="button" 
-                            className="cart-qty-btn"
-                            onClick={() => handleUpdateQty(idx, -1)}
+                            className="btn-icon-ghost" 
+                            style={{ width: '28px', height: '28px', color: 'var(--danger)' }}
+                            onClick={() => handleRemoveItem(idx)}
                           >
-                            -
+                            <Trash2 size={15} />
                           </button>
-                          <span style={{ fontWeight: '600', minWidth: '20px', textAlign: 'center' }}>
-                            {item.quantity}
-                          </span>
-                          <button 
-                            type="button" 
-                            className="cart-qty-btn"
-                            onClick={() => handleUpdateQty(idx, 1)}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td style={{ textAlign: 'right', fontWeight: '700' }}>
-                        {(item.price * item.quantity).toLocaleString()} UZS
-                      </td>
-                      <td style={{ textAlign: 'center' }}>
-                        <button 
-                          type="button" 
-                          className="btn-icon-ghost" 
-                          style={{ width: '28px', height: '28px', color: 'var(--danger)' }}
-                          onClick={() => handleRemoveItem(idx)}
-                        >
-                          <Trash2 size={15} />
-                        </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} style={{ textAlign: 'center', padding: '1.25rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                        Savatcha bo'sh. Yuqoridagi ro'yxatdan tovar yoki xizmat tanlang.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
 

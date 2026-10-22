@@ -1,42 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeftRight, Plus, CheckCircle, Clock, Truck, Package, X } from 'lucide-react';
 
 export function StockTransferView({ products, branches }) {
-  const [transfers, setTransfers] = useState([
-    {
-      id: 'TR-9042',
-      fromBranch: 'AN2 - Andijon',
-      toBranch: 'AN1 - Asaka ombori',
-      productName: 'Didar TOURING 771 185/65/14',
-      productCode: 'SHN0955',
-      quantity: 12,
-      driver: 'Qodirov Botir (Yuk mashinasi 60 414 AAA)',
-      date: '21.10.2026 15:00',
-      status: 'Yo\'lda'
-    },
-    {
-      id: 'TR-9038',
-      fromBranch: 'AN1 - Asaka ombori',
-      toBranch: 'AN2 - Andijon',
-      productName: 'Yallama 195/60/15',
-      productCode: 'SHN0613',
-      quantity: 24,
-      driver: 'Mirzayev Said (Labo 60 782 BAA)',
-      date: '20.10.2026 11:30',
-      status: 'Yetkazildi'
-    },
-    {
-      id: 'TR-9031',
-      fromBranch: 'AN2 - Andijon',
-      toBranch: 'TSH1 - Toshkent Sergeli',
-      productName: 'CARASCO DIVORNIY SUV 20 KO\'K',
-      productCode: 'AF0007',
-      quantity: 10,
-      driver: 'Iskandarov Otabek',
-      date: '19.10.2026 09:20',
-      status: 'Yetkazildi'
-    }
-  ]);
+  const [transfers, setTransfers] = useState(() => {
+    const saved = localStorage.getItem('asko_transfers');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('asko_transfers', JSON.stringify(transfers));
+  }, [transfers]);
+
 
   const [showModal, setShowModal] = useState(false);
   const [fromBranch, setFromBranch] = useState('AN2');
@@ -126,40 +100,56 @@ export function StockTransferView({ products, branches }) {
               </tr>
             </thead>
             <tbody>
-              {transfers.map((t) => (
-                <tr key={t.id}>
-                  <td className="table-cell-id">{t.id}</td>
-                  <td style={{ fontWeight: '600' }}>{t.fromBranch}</td>
-                  <td style={{ fontWeight: '600', color: 'var(--info)' }}>{t.toBranch}</td>
-                  <td>
-                    <div style={{ fontWeight: '600' }}>{t.productName}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Kodi: {t.productCode}</div>
-                  </td>
-                  <td style={{ fontWeight: '700' }}>{t.quantity} dona</td>
-                  <td>{t.driver}</td>
-                  <td style={{ fontFamily: 'var(--font-mono)' }}>{t.date}</td>
-                  <td>
-                    <span className={`status-pill ${t.status === 'Yetkazildi' ? 'success' : 'warning'}`}>
-                      {t.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {t.status === 'Yo\'lda' ? (
-                      <button 
-                        className="btn-secondary" 
-                        style={{ height: '30px', padding: '0 8px', fontSize: '0.75rem' }}
-                        onClick={() => {
-                          setTransfers(transfers.map(tr => tr.id === t.id ? { ...tr, status: 'Yetkazildi' } : tr));
-                        }}
-                      >
-                        Qabul qilish
-                      </button>
-                    ) : (
-                      <span style={{ fontSize: '0.75rem', color: 'var(--success)' }}>✓ Qabul qilingan</span>
-                    )}
+              {transfers.length > 0 ? (
+                transfers.map((t) => (
+                  <tr key={t.id}>
+                    <td className="table-cell-id">{t.id}</td>
+                    <td style={{ fontWeight: '600' }}>{t.fromBranch}</td>
+                    <td style={{ fontWeight: '600', color: 'var(--info)' }}>{t.toBranch}</td>
+                    <td>
+                      <div style={{ fontWeight: '600' }}>{t.productName}</div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Kodi: {t.productCode}</div>
+                    </td>
+                    <td style={{ fontWeight: '700' }}>{t.quantity} dona</td>
+                    <td>{t.driver}</td>
+                    <td style={{ fontFamily: 'var(--font-mono)' }}>{t.date}</td>
+                    <td>
+                      <span className={`status-pill ${t.status === 'Yetkazildi' ? 'success' : 'warning'}`}>
+                        {t.status}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {t.status === 'Yo\'lda' ? (
+                        <button 
+                          className="btn-secondary" 
+                          style={{ height: '30px', padding: '0 8px', fontSize: '0.75rem' }}
+                          onClick={() => {
+                            setTransfers(transfers.map(tr => tr.id === t.id ? { ...tr, status: 'Yetkazildi' } : tr));
+                          }}
+                        >
+                          Qabul qilish
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--success)' }}>✓ Qabul qilingan</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={9}>
+                    <div className="empty-state">
+                      <div className="empty-state-icon">
+                        <Truck size={28} />
+                      </div>
+                      <div style={{ fontWeight: '600' }}>Zaxira ko'chirishlar mavjud emas</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                        Filiallar o'rtasida zaxira ko'chirish uchun "+ Ko'chirish rasmiylashtirish" tugmasini bosing
+                      </div>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

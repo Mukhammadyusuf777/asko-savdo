@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Menu, Search, Bell, MessageSquare, Volume2, 
-  Moon, Sun, ChevronDown, CheckCircle2 
+  Menu, Search, Moon, Sun, ChevronDown, CheckCircle2 
 } from 'lucide-react';
 
 export function Header({ 
@@ -50,47 +49,6 @@ export function Header({
       </div>
 
       <div className="header-right">
-        {/* Reyting */}
-        <div className="metric-pill" title="Filial xizmat ko'rsatish reytingi">
-          <span className="metric-label">Reyting</span>
-          <span className="metric-val green">95.36%</span>
-        </div>
-
-        {/* Dollar kursi */}
-        <div className="metric-pill" title="Markaziy Bank dollar kursi">
-          <span className="metric-label">Kurs dollara</span>
-          <span className="metric-val">12 100 UZS</span>
-        </div>
-
-        {/* Hilal / Oylik reja */}
-        <div className="metric-pill" title="Oylik shina va xizmat sotuv rejasi">
-          <span className="metric-label">Oylik reja</span>
-          <span className="metric-val">850</span>
-        </div>
-
-        {/* Kunlik norma */}
-        <div className="metric-pill" title="Kunlik minimal sotuv normasi">
-          <span className="metric-label">Kunlik norma</span>
-          <span className="metric-val">25</span>
-        </div>
-
-        {/* Bildirishnomalar */}
-        <button className="header-action-btn" title="Bildirishnomalar" aria-label="Bildirishnomalar">
-          <Bell size={18} />
-          <span className="badge-counter">1</span>
-        </button>
-
-        {/* Xabarlar */}
-        <button className="header-action-btn" title="Mijozlar murojaatlari" aria-label="Xabarlar">
-          <MessageSquare size={18} />
-          <span className="badge-counter">99+</span>
-        </button>
-
-        {/* E'lonlar */}
-        <button className="header-action-btn" title="Ichki e'lonlar" aria-label="E'lonlar">
-          <Volume2 size={18} />
-        </button>
-
         {/* Mavzu (Dark/Light) */}
         <button 
           className="header-action-btn" 

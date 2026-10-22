@@ -1,39 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Plus, Clock, CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 export function OrdersView({ products }) {
-  const [orders, setOrders] = useState([
-    {
-      id: 'BUY-401',
-      productName: 'Didar TOURING 771 195/65/15',
-      code: 'SHN0949',
-      quantity: 50,
-      supplier: 'DIDAR Shina Zavodi (Qozog\'iston)',
-      expectedDate: '26.10.2026',
-      totalCost: 20000000,
-      status: 'Kutilmoqda'
-    },
-    {
-      id: 'BUY-398',
-      productName: 'ANTIFRIZ 1KG ko\'k -40',
-      code: 'AF0003',
-      quantity: 100,
-      supplier: 'CAR ASKO Kimyo MCHJ',
-      expectedDate: '24.10.2026',
-      totalCost: 1900000,
-      status: 'Kutilmoqda'
-    },
-    {
-      id: 'BUY-389',
-      productName: 'Fortuna ECOPLUS2 4S 205/70/14',
-      code: 'SHN0206',
-      quantity: 40,
-      supplier: 'Fortuna Tires Distribyutor',
-      expectedDate: '18.10.2026',
-      totalCost: 17200000,
-      status: 'Qabul qilindi'
-    }
-  ]);
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('asko_orders');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('asko_orders', JSON.stringify(orders));
+  }, [orders]);
+
 
   const [showModal, setShowModal] = useState(false);
   const [selectedProd, setSelectedProd] = useState(products[0]?.code || 'SHN0613');
@@ -121,37 +98,53 @@ export function OrdersView({ products }) {
               </tr>
             </thead>
             <tbody>
-              {orders.map((o) => (
-                <tr key={o.id}>
-                  <td className="table-cell-id">{o.id}</td>
-                  <td style={{ fontWeight: '600' }}>{o.productName}</td>
-                  <td>{o.code}</td>
-                  <td style={{ fontWeight: '700' }}>{o.quantity} dona</td>
-                  <td>{o.supplier}</td>
-                  <td style={{ fontWeight: '700' }}>{o.totalCost.toLocaleString()} UZS</td>
-                  <td style={{ fontFamily: 'var(--font-mono)' }}>{o.expectedDate}</td>
-                  <td>
-                    <span className={`status-pill ${o.status === 'Qabul qilindi' ? 'success' : 'warning'}`}>
-                      {o.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {o.status === 'Kutilmoqda' ? (
-                      <button 
-                        className="btn-secondary" 
-                        style={{ height: '30px', padding: '0 8px', fontSize: '0.75rem' }}
-                        onClick={() => {
-                          setOrders(orders.map(item => item.id === o.id ? { ...item, status: 'Qabul qilindi' } : item));
-                        }}
-                      >
-                        Qabul qildim
-                      </button>
-                    ) : (
-                      <span style={{ fontSize: '0.75rem', color: 'var(--success)' }}>✓ Omborga kirdi</span>
-                    )}
+              {orders.length > 0 ? (
+                orders.map((o) => (
+                  <tr key={o.id}>
+                    <td className="table-cell-id">{o.id}</td>
+                    <td style={{ fontWeight: '600' }}>{o.productName}</td>
+                    <td>{o.code}</td>
+                    <td style={{ fontWeight: '700' }}>{o.quantity} dona</td>
+                    <td>{o.supplier}</td>
+                    <td style={{ fontWeight: '700' }}>{o.totalCost.toLocaleString()} UZS</td>
+                    <td style={{ fontFamily: 'var(--font-mono)' }}>{o.expectedDate}</td>
+                    <td>
+                      <span className={`status-pill ${o.status === 'Qabul qilindi' ? 'success' : 'warning'}`}>
+                        {o.status}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {o.status === 'Kutilmoqda' ? (
+                        <button 
+                          className="btn-secondary" 
+                          style={{ height: '30px', padding: '0 8px', fontSize: '0.75rem' }}
+                          onClick={() => {
+                            setOrders(orders.map(item => item.id === o.id ? { ...item, status: 'Qabul qilindi' } : item));
+                          }}
+                        >
+                          Qabul qildim
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--success)' }}>✓ Omborga kirdi</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={9}>
+                    <div className="empty-state">
+                      <div className="empty-state-icon">
+                        <ShoppingBag size={28} />
+                      </div>
+                      <div style={{ fontWeight: '600' }}>Tovarga buyurtmalar mavjud emas</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                        Yangi partiya tovar buyurtma qilish uchun "+ Yangi buyurtma" tugmasini bosing
+                      </div>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
