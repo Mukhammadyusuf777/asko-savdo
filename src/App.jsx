@@ -93,7 +93,7 @@ export function App() {
     fetch('/api/sales')
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setSales(data);
         }
       })
