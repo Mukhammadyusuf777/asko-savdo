@@ -1,0 +1,9 @@
+name = "asko-savdo"
+compatibility_date = "2024-10-22"
+pages_build_output_dir = "./dist"
+
+# Cloudflare D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "asko-db"
+database_id = "asko-db-id" # Foydalanuvchi D1 yaratganda olingan ID qo'yiladi
